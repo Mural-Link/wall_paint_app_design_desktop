@@ -81,10 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(function (response) {
                 roomImage.src = response.data.image_url;
                 originalImage = response.data.image_url;
-                processImage.classList.remove('hidden');
-                segmentsContainer.classList.add('hidden');
-                colorPickerContainer.classList.add('hidden');
-                progressBarContainer.classList.add('hidden');
+                processImage.disabled = false;
             })
             .catch(function (error) {
                 console.error('Error:', error);
@@ -93,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     processImage.addEventListener('click', function() {
-        processImage.classList.add('hidden');
         progressBarContainer.classList.remove('hidden');
 
         axios.post('/process_image')
@@ -102,13 +98,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 highlightedImages = data.highlighted_images;
 
                 displaySegments(data.num_segments);
-                segmentsContainer.classList.remove('hidden');
                 progressBarContainer.classList.add('hidden');
             })
             .catch(function (error) {
                 console.error('Error:', error);
                 progressBarContainer.classList.add('hidden');
-                processImage.classList.remove('hidden');
             });
     });
 
@@ -126,7 +120,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function selectSegment(index) {
         selectedSegment = index;
         roomImage.src = `data:image/png;base64,${highlightedImages[index]}`;
-        colorPickerContainer.classList.remove('hidden');
         updateSegmentDisplay();
         if (segmentColors[index]) {
             selectColor(segmentColors[index]);
@@ -191,5 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
+    // Initialize the color palette
     initColorPalette();
 });
